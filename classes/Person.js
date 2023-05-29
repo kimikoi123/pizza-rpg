@@ -1,5 +1,4 @@
-import { GameObject } from './index'
-
+import { GameObject } from "./index"
 
 class Person extends GameObject {
   constructor(config) {

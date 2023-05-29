@@ -25,45 +25,44 @@ class OverworldMap {
   }
 }
 
-if (typeof window !== "undefined") {
-  window.OverworldMaps = {
-    DemoRoom: {
-      lowerSrc: "/maps/DemoLower.png",
-      upperSrc: "/maps/DemoUpper.png",
-      gameObjects: {
-        hero: new Person({
-          isPlayerControlled: true,
-          x: withGrid(5),
-          y: withGrid(6),
-        }),
-        npc1: new Person({
-          x: withGrid(7),
-          y: withGrid(9),
-          src: "/characters/people/npc1.png"
-        })
-      }
-    },
-    Kitchen: {
-      lowerSrc: "/maps/KitchenLower.png",
-      upperSrc: "/maps/KitchenUpper.png",
-      gameObjects: {
-        hero: new GameObject({
-          x: 3,
-          y: 5,
-        }),
-        npcA: new GameObject({
-          x: 9,
-          y: 6,
-          src: "/characters/people/npc2.png"
-        }),
-        npcB: new GameObject({
-          x: 10,
-          y: 8,
-          src: "/characters/people/npc3.png"
-        })
-      }
-    },
-  }
-}
+// if (typeof window !== "undefined") {
+//   window.OverworldMaps = {
+//     DemoRoom: {
+//       lowerSrc: "/maps/DemoLower.png",
+//       upperSrc: "/maps/DemoUpper.png",
+//       gameObjects: {
+//         hero: new Person({
+//           isPlayerControlled: true,
+//           x: withGrid(5),
+//           y: withGrid(6),
+//         }),
+//         npc1: new Person({
+//           x: withGrid(7),
+//           y: withGrid(9),
+//           src: "/characters/people/npc1.png"
+//         })
+//       }
+//     },
+//     Kitchen: {
+//       lowerSrc: "/maps/KitchenLower.png",
+//       upperSrc: "/maps/KitchenUpper.png",
+//       gameObjects: {
+//         hero: new GameObject({
+//           x: 3,
+//           y: 5,}),
+//         npcA: new GameObject({
+//           x: 9,
+//           y: 6,
+//           src: "/characters/people/npc2.png"
+//         }),
+//         npcB: new GameObject({
+//           x: 10,
+//           y: 8,
+//           src: "/characters/people/npc3.png"
+//         })
+//       }
+//     },
+//   }
+// }
 
 export default OverworldMap

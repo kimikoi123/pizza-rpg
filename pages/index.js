@@ -4,6 +4,47 @@ import Link from "next/link"
 import Metamask from "../components/metamask"
 import { GameObject, OverworldMap, DirectionInput } from "../classes"
 
+const OVERWORLD_MAPS = [
+  {
+    name: "DemoRoom",
+    lowerSrc: "/maps/DemoLower.png",
+    upperSrc: "/maps/DemoUpper.png",
+    gameObjects: {
+      hero: new Person({
+        isPlayerControlled: true,
+        x: withGrid(5),
+        y: withGrid(6),
+      }),
+      npc1: new Person({
+        x: withGrid(7),
+        y: withGrid(9),
+        src: "/characters/people/npc1.png",
+      }),
+    },
+  },
+  {
+    name: "Kitchen",
+    lowerSrc: "/maps/KitchenLower.png",
+    upperSrc: "/maps/KitchenUpper.png",
+    gameObjects: {
+      hero: new GameObject({
+        x: 3,
+        y: 5,
+      }),
+      npcA: new GameObject({
+        x: 9,
+        y: 6,
+        src: "/characters/people/npc2.png",
+      }),
+      npcB: new GameObject({
+        x: 10,
+        y: 8,
+        src: "/characters/people/npc3.png",
+      }),
+    },
+  },
+]
+
 const Index = () => {
   const canvasRef = useRef(null)
   let map = null
@@ -20,15 +61,15 @@ const Index = () => {
         map.drawLowerImage(canvas)
 
         //Draw Game Objects
-        Object.values(map.gameObjects).forEach((object) => {
-          object.update({
-            arrow: directionInput.direction,
+        if (directionInput) {
+          Object.values(map.gameObjects).forEach((object) => {
+            object.update({
+              arrow: directionInput.direction,
+            })
+            object.sprite.draw(canvas)
           })
-          object.sprite.draw(canvas)
-        })
-
+        }
         //Draw Upper layer
-
         map.drawUpperImage(canvas)
       }
 
@@ -65,5 +106,47 @@ const Index = () => {
     </div>
   )
 }
+
+
+
+// if (typeof window !== "undefined") {
+//   window.OverworldMaps = {
+//     DemoRoom: {
+//       lowerSrc: "/maps/DemoLower.png",
+//       upperSrc: "/maps/DemoUpper.png",
+//       gameObjects: {
+//         hero: new Person({
+//           isPlayerControlled: true,
+//           x: withGrid(5),
+//           y: withGrid(6),
+//         }),
+//         npc1: new Person({
+//           x: withGrid(7),
+//           y: withGrid(9),
+//           src: "/characters/people/npc1.png"
+//         })
+//       }
+//     },
+//     Kitchen: {
+//       lowerSrc: "/maps/KitchenLower.png",
+//       upperSrc: "/maps/KitchenUpper.png",
+//       gameObjects: {
+//         hero: new GameObject({
+//           x: 3,
+//           y: 5,}),
+//         npcA: new GameObject({
+//           x: 9,
+//           y: 6,
+//           src: "/characters/people/npc2.png"
+//         }),
+//         npcB: new GameObject({
+//           x: 10,
+//           y: 8,
+//           src: "/characters/people/npc3.png"
+//         })
+//       }
+//     },
+//   }
+// }
 
 export default Index
