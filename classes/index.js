@@ -1,0 +1,5 @@
+export { default as GameObject } from './GameObject'
+export { default as Sprite } from './Sprite'
+export { default as OverworldMap } from './OverworldMap'
+export { default as DirectionInput } from './DirectionInput'
+export { default as Person } from './Person'

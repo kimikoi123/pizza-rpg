@@ -1,0 +1,10 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+
+.game-canvas {
+  image-rendering: pixelated;
+}
+
