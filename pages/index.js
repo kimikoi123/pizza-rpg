@@ -1,77 +1,79 @@
 import { useState, useEffect, useRef } from "react"
-import { signMessage } from "../utils/sign"
+import { signMessage } from "../utils/helpers"
 import Link from "next/link"
 import Metamask from "../components/metamask"
-import { GameObject, OverworldMap, DirectionInput } from "../classes"
-
-const OVERWORLD_MAPS = [
-  {
-    name: "DemoRoom",
-    lowerSrc: "/maps/DemoLower.png",
-    upperSrc: "/maps/DemoUpper.png",
-    gameObjects: {
-      hero: new Person({
-        isPlayerControlled: true,
-        x: withGrid(5),
-        y: withGrid(6),
-      }),
-      npc1: new Person({
-        x: withGrid(7),
-        y: withGrid(9),
-        src: "/characters/people/npc1.png",
-      }),
-    },
-  },
-  {
-    name: "Kitchen",
-    lowerSrc: "/maps/KitchenLower.png",
-    upperSrc: "/maps/KitchenUpper.png",
-    gameObjects: {
-      hero: new GameObject({
-        x: 3,
-        y: 5,
-      }),
-      npcA: new GameObject({
-        x: 9,
-        y: 6,
-        src: "/characters/people/npc2.png",
-      }),
-      npcB: new GameObject({
-        x: 10,
-        y: 8,
-        src: "/characters/people/npc3.png",
-      }),
-    },
-  },
-]
+import { GameObject, OverworldMap, DirectionInput, Person } from "../classes"
+import { withGrid } from "../utils/helpers"
 
 const Index = () => {
   const canvasRef = useRef(null)
-  let map = null
-  let directionInput = null
+
+  // let map = null
+  // let directionInput = null
+  // let cameraPerson = null
 
   const startGameLoop = () => {
+    const OVERWORLD_MAPS = {
+      DemoRoom: {
+        lowerSrc: "/maps/DemoLower.png",
+        upperSrc: "/maps/DemoUpper.png",
+        gameObjects: {
+          hero: new Person({
+            isPlayerControlled: true,
+            x: withGrid(5),
+            y: withGrid(6),
+          }),
+          npc1: new Person({
+            x: withGrid(7),
+            y: withGrid(9),
+            src: "/characters/people/npc1.png",
+          }),
+        },
+      },
+      Kitchen: {
+        lowerSrc: "/maps/KitchenLower.png",
+        upperSrc: "/maps/KitchenUpper.png",
+        gameObjects: {
+          hero: new GameObject({
+            x: 3,
+            y: 5,
+          }),
+          npcA: new GameObject({
+            x: 9,
+            y: 6,
+            src: "/characters/people/npc2.png",
+          }),
+          npcB: new GameObject({
+            x: 10,
+            y: 8,
+            src: "/characters/people/npc3.png",
+          }),
+        },
+      },
+    }
     const canvas = canvasRef.current.getContext("2d")
+    const map = new OverworldMap(OVERWORLD_MAPS.DemoRoom)
+    const directionInput = new DirectionInput()
+    directionInput.init()
+    const cameraPerson = map.gameObjects.hero
     const step = () => {
       //Clear off the canvas
-      canvas.clearRect(0, 0, canvas.width, canvas.height)
+      canvas.clearRect(0, 0, canvas.canvas.width, canvas.canvas.height)
 
-      if (map) {
-        //Draw Lower layer
-        map.drawLowerImage(canvas)
+      //Draw Lower layer
+      map.drawLowerImage(canvas, cameraPerson)
 
-        //Draw Game Objects
-        if (directionInput) {
-          Object.values(map.gameObjects).forEach((object) => {
-            object.update({
-              arrow: directionInput.direction,
-            })
-            object.sprite.draw(canvas)
-          })
-        }
-        //Draw Upper layer
-        map.drawUpperImage(canvas)
-      }
+      //Draw Game Objects
+
+      Object.values(map.gameObjects).forEach((object) => {
+        object.update({
+          arrow: directionInput.direction,
+        })
+        object.sprite.draw(canvas, cameraPerson)
+      })
+
+      //Draw Upper layer
+      map.drawUpperImage(canvas, cameraPerson)
 
       requestAnimationFrame(() => {
         step()
@@ -80,14 +82,14 @@ const Index = () => {
     step()
   }
 
-  const init = () => {
-    map = new OverworldMap(window.OverworldMaps.Kitchen)
-    directionInput = new DirectionInput()
-    directionInput.init()
-    startGameLoop()
-  }
-
   useEffect(() => {
+    const init = () => {
+      // map = new OverworldMap(OVERWORLD_MAPS.DemoRoom)
+      // directionInput = new DirectionInput()
+      // directionInput.init()
+      // cameraPerson = map.gameObjects.hero
+      startGameLoop()
+    }
     init()
   }, [])
 
@@ -107,9 +109,7 @@ const Index = () => {
   )
 }
 
-
-
-// if (typeof window !== "undefined") {
+// if (typeof window !== 'undefined') {
 //   window.OverworldMaps = {
 //     DemoRoom: {
 //       lowerSrc: "/maps/DemoLower.png",
@@ -117,12 +117,12 @@ const Index = () => {
 //       gameObjects: {
 //         hero: new Person({
 //           isPlayerControlled: true,
-//           x: withGrid(5),
-//           y: withGrid(6),
+//           x: utils.withGrid(5),
+//           y: utils.withGrid(6),
 //         }),
 //         npc1: new Person({
-//           x: withGrid(7),
-//           y: withGrid(9),
+//           x: utils.withGrid(7),
+//           y: utils.withGrid(9),
 //           src: "/characters/people/npc1.png"
 //         })
 //       }
@@ -133,7 +133,8 @@ const Index = () => {
 //       gameObjects: {
 //         hero: new GameObject({
 //           x: 3,
-//           y: 5,}),
+//           y: 5,
+//         }),
 //         npcA: new GameObject({
 //           x: 9,
 //           y: 6,
