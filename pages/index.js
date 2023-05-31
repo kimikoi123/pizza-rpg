@@ -1,12 +1,17 @@
-import { useState, useEffect, useRef } from "react"
-import { signMessage } from "../utils/helpers"
-import Link from "next/link"
-import Metamask from "../components/metamask"
-import {
-  Person,
-  Overworld,
-} from "../classes"
+import { useEffect, useRef, useState } from "react"
+import { Person, Overworld } from "../classes"
 import { withGrid, asGridCoord } from "../utils/helpers"
+import { signInAnonymously, onAuthStateChanged } from "firebase/auth"
+import { auth, database } from "../utils/firebase"
+import {
+  ref,
+  set,
+  onDisconnect,
+  onValue,
+  onChildAdded,
+  update,
+  remove,
+} from "firebase/database"
 
 const Index = () => {
   const canvasRef = useRef(null)
@@ -27,20 +32,24 @@ const Index = () => {
             y: withGrid(9),
             src: "/characters/people/npc1.png",
             behaviorLoop: [
-              { type: "stand",  direction: "left", time: 800 },
-              { type: "stand",  direction: "up", time: 800 },
-              { type: "stand",  direction: "right", time: 1200 },
-              { type: "stand",  direction: "up", time: 300 },
+              { type: "stand", direction: "left", time: 800 },
+              { type: "stand", direction: "up", time: 800 },
+              { type: "stand", direction: "right", time: 1200 },
+              { type: "stand", direction: "up", time: 300 },
             ],
             talking: [
               {
                 events: [
-                  { type: "textMessage", text: "I'm busy...", faceHero: "npcA" },
-                  { type: "textMessage", text: "Go away!"},
-                  { who: "hero", type: "walk",  direction: "up" },
-                ]
-              }
-            ]
+                  {
+                    type: "textMessage",
+                    text: "I'm busy...",
+                    faceHero: "npcA",
+                  },
+                  { type: "textMessage", text: "Go away!" },
+                  { who: "hero", type: "walk", direction: "up" },
+                ],
+              },
+            ],
           }),
           npcB: new Person({
             x: withGrid(8),
@@ -56,33 +65,30 @@ const Index = () => {
           }),
         },
         walls: {
-          [asGridCoord(7,6)] : true,
-          [asGridCoord(8,6)] : true,
-          [asGridCoord(7,7)] : true,
-          [asGridCoord(8,7)] : true,
+          [asGridCoord(7, 6)]: true,
+          [asGridCoord(8, 6)]: true,
+          [asGridCoord(7, 7)]: true,
+          [asGridCoord(8, 7)]: true,
         },
         cutsceneSpaces: {
-          [asGridCoord(7,4)]: [
+          [asGridCoord(7, 4)]: [
             {
               events: [
-                { who: "npcB", type: "walk",  direction: "left" },
-                { who: "npcB", type: "stand",  direction: "up", time: 500 },
-                { type: "textMessage", text:"You can't be in there!"},
-                { who: "npcB", type: "walk",  direction: "right" },
-                { who: "hero", type: "walk",  direction: "down" },
-                { who: "hero", type: "walk",  direction: "left" },
-              ]
-            }
+                { who: "npcB", type: "walk", direction: "left" },
+                { who: "npcB", type: "stand", direction: "up", time: 500 },
+                { type: "textMessage", text: "You can't be in there!" },
+                { who: "npcB", type: "walk", direction: "right" },
+                { who: "hero", type: "walk", direction: "down" },
+                { who: "hero", type: "walk", direction: "left" },
+              ],
+            },
           ],
-          [asGridCoord(5,10)]: [
+          [asGridCoord(5, 10)]: [
             {
-              events: [
-                { type: "changeMap", map: "Kitchen" }
-              ]
-            }
-          ]
-        }
-        
+              events: [{ type: "changeMap", map: "Kitchen" }],
+            },
+          ],
+        },
       },
       Kitchen: {
         lowerSrc: "/maps/KitchenLower.png",
@@ -100,24 +106,66 @@ const Index = () => {
             talking: [
               {
                 events: [
-                  { type: "textMessage", text: "You made it!", faceHero:"npcB" },
-                ]
-              }
-            ]
-          })
-        }
+                  {
+                    type: "textMessage",
+                    text: "You made it!",
+                    faceHero: "npcB",
+                  },
+                ],
+              },
+            ],
+          }),
+        },
       },
     }
     const overworld = new Overworld({
       element: document.querySelector(".game-container"),
-      canvas: document.querySelector('.game-canvas'),
-      initialMap: OVERWORLD_MAP
+      canvas: document.querySelector(".game-canvas"),
     })
-
+    overworld.startMap(OVERWORLD_MAP.DemoRoom)
     overworld.init()
   }
 
+  const initGame = (id) => {
+    const allPlayersRef = ref(database, "players")
+
+    onValue(allPlayersRef, (snapshot) => {
+      const players = snapshot.val() || {}
+      const currentPlayer = players[id]
+    })
+
+    onChildAdded(allPlayersRef, (snapshot) => {
+      const addedPlayer = snapshot.val()
+    })
+
+    // enableMovement()
+    // placeCoin()
+  }
+
+  const initFirebase = () => {
+    signInAnonymously(auth).catch((error) => {
+      const errorMessage = error.message
+      console.log(errorMessage)
+    })
+
+    onAuthStateChanged(auth, (user) => {
+      if (user.uid) {
+        const userId = user.uid
+        const playerRef = ref(database, `players/${user.uid}`)
+        set(playerRef, {
+          id: userId,
+          isPlayerControlled: true,
+          x: 5,
+          y: 6,
+        })
+        initGame(userId)
+        onDisconnect(playerRef).remove()
+      }
+    })
+  }
+
   useEffect(() => {
+    // initFirebase()
     init()
   }, [])
 

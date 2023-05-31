@@ -1,5 +1,6 @@
 import { oppositeDirection, withGrid, asGridCoord } from "../utils/helpers"
 import { TextMessage, Person, SceneTransition } from "./index"
+import { Battle } from "../battle"
 
 class OverworldEvent {
   constructor({ map, event }) {
@@ -56,9 +57,7 @@ class OverworldEvent {
   textMessage(resolve) {
     if (this.event.faceHero) {
       const obj = this.map.gameObjects[this.event.faceHero]
-      obj.direction = oppositeDirection(
-        this.map.gameObjects["hero"].direction
-      )
+      obj.direction = oppositeDirection(this.map.gameObjects["hero"].direction)
     }
 
     const message = new TextMessage({
@@ -172,11 +171,19 @@ class OverworldEvent {
     }
     const sceneTransition = new SceneTransition()
     sceneTransition.init(document.querySelector(".game-container"), () => {
-        this.map.overworld.startMap(OVERWORLD_MAP[this.event.map])
-        resolve()
-        sceneTransition.fadeOut()
+      this.map.overworld.startMap(OVERWORLD_MAP[this.event.map])
+      resolve()
+      sceneTransition.fadeOut()
     })
-   
+  }
+
+  battle(resolve) {
+    const battle = new Battle({
+      onComplete: () => {
+        resolve()
+      },
+    })
+    battle.init(document.querySelector(".game-container"))
   }
 
   init() {

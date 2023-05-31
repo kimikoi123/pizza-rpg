@@ -1,12 +1,11 @@
 import { OverworldMap, KeyPressListener, DirectionInput } from "."
 
 class Overworld {
-  constructor({ element, canvas, initialMap }) {
+  constructor({ element, canvas }) {
     this.element = element
     this.canvas = canvas
     this.ctx = this.canvas.getContext("2d")
     this.map = null
-    this.initialMap = initialMap
   }
 
   startGameLoop() {
@@ -23,6 +22,10 @@ class Overworld {
           arrow: this.directionInput.direction,
           map: this.map,
         })
+        // if (object.id === 'hero') {
+        //   console.log(object.x, object.y) 
+        // }
+        
       })
 
       //Draw Lower layer
@@ -71,8 +74,6 @@ class Overworld {
   }
 
   init() {
-    this.startMap(this.initialMap.DemoRoom)
-
     this.bindActionInput()
     this.bindHeroPositionCheck()
 
@@ -81,17 +82,11 @@ class Overworld {
 
     this.startGameLoop()
 
-    // this.map.startCutscene([
-    //   { who: "hero", type: "walk",  direction: "down" },
-    //   { who: "hero", type: "walk",  direction: "down" },
-    //   { who: "npcA", type: "walk",  direction: "up" },
-    //   { who: "npcA", type: "walk",  direction: "left" },
-    //   { who: "hero", type: "stand",  direction: "right", time: 200 },
-    //   { type: "textMessage", text: "WHY HELLO THERE!"}
-    //   // { who: "npcA", type: "walk",  direction: "left" },
-    //   // { who: "npcA", type: "walk",  direction: "left" },
-    //   // { who: "npcA", type: "stand",  direction: "up", time: 800 },
-    // ])
+    this.map.startCutscene([
+      { type: "battle" }
+      // { type: "changeMap", map: "DemoRoom"}
+      // { type: "textMessage", text: "This is the very first message!"}
+    ])
   }
 }
 
