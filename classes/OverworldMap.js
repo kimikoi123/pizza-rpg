@@ -59,7 +59,10 @@ class OverworldMap {
         event: events[i],
         map: this,
       })
-      await eventHandler.init();
+      const result = await eventHandler.init();
+      if (result === "LOST_BATTLE") {
+        break;
+      }
     }
 
     this.isCutscenePlaying = false;
