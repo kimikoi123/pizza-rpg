@@ -43,6 +43,12 @@ class Overworld {
       //Draw Upper layer
       this.map.drawUpperImage(this.ctx, cameraPerson)
 
+      // if (!this.map.isPaused) {
+      //   requestAnimationFrame(() => {
+      //     step();   
+      //   })
+      // }
+
       requestAnimationFrame(() => {
         step()
       })
@@ -55,6 +61,13 @@ class Overworld {
       //Is there a person here to talk to?
       this.map.checkForActionCutscene()
     })
+    // new KeyPressListener("Escape", () => {
+    //   if (!this.map.isCutscenePlaying) {
+    //    this.map.startCutscene([
+    //      { type: "pause" }
+    //    ])
+    //   }
+    // })
   }
 
   bindHeroPositionCheck() {
@@ -64,6 +77,7 @@ class Overworld {
         this.map.checkForFootstepCutscene()
       }
     })
+    
   }
 
   startMap(mapConfig) {
