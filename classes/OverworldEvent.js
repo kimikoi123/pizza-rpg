@@ -142,6 +142,12 @@ class OverworldEvent {
             //   { type: "walk",  direction: "down" },
             // ]
           }),
+          pizzaStone: new PizzaStone({
+            x: withGrid(2),
+            y: withGrid(7),
+            storyFlag: "USED_PIZZA_STONE",
+            pizzas: ["v001", "f001"],
+          }),
         },
         walls: {
           [asGridCoord(7, 6)]: true,
@@ -230,6 +236,16 @@ class OverworldEvent {
   addStoryFlag(resolve) {
     playerState.storyFlags[this.event.flag] = true
     resolve()
+  }
+
+  craftingMenu(resolve) {
+    const menu = new CraftingMenu({
+      pizzas: this.event.pizzas,
+      onComplete: () => {
+        resolve();
+      }
+    })
+    menu.init(document.querySelector(".game-container"))
   }
 
   init() {

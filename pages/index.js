@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react"
-import { Person, Overworld } from "../classes"
+import { Person, Overworld, PizzaStone } from "../classes"
 import { withGrid, asGridCoord } from "../utils/helpers"
 import { signInAnonymously, onAuthStateChanged } from "firebase/auth"
 import { auth, database } from "../utils/firebase"
@@ -88,6 +88,12 @@ const Index = () => {
             //   { type: "walk",  direction: "right" },
             //   { type: "walk",  direction: "down" },
             // ]
+          }),
+          pizzaStone: new PizzaStone({
+            x: withGrid(2),
+            y: withGrid(7),
+            storyFlag: "USED_PIZZA_STONE",
+            pizzas: ["v001", "f001"],
           }),
         },
         walls: {
