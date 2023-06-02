@@ -1,5 +1,5 @@
 import { oppositeDirection, withGrid, asGridCoord } from "../utils/helpers"
-import { TextMessage, Person, SceneTransition, PauseMenu } from "."
+import { TextMessage, Person, SceneTransition, PauseMenu, PizzaStone } from "."
 import { Battle } from "../battle"
 import { Enemies } from "../content/actions"
 import { playerState } from "../state/PlayerState"
@@ -72,6 +72,7 @@ class OverworldEvent {
   changeMap(resolve) {
     const OVERWORLD_MAP = {
       DemoRoom: {
+        id: "DemoRoom",
         lowerSrc: "/maps/DemoLower.png",
         upperSrc: "/maps/DemoUpper.png",
         gameObjects: {
@@ -170,12 +171,21 @@ class OverworldEvent {
           ],
           [asGridCoord(5, 10)]: [
             {
-              events: [{ type: "changeMap", map: "Kitchen" }],
+              events: [
+                {
+                  type: "changeMap",
+                  map: "Kitchen",
+                  x: withGrid(2),
+                  y: withGrid(2),
+                  direction: "down",
+                },
+              ],
             },
           ],
         },
       },
       Kitchen: {
+        id: "Kitchen",
         lowerSrc: "/maps/KitchenLower.png",
         upperSrc: "/maps/KitchenUpper.png",
         gameObjects: {
@@ -201,11 +211,57 @@ class OverworldEvent {
             ],
           }),
         },
+        cutsceneSpaces: {
+          [asGridCoord(5, 10)]: [
+            {
+              events: [
+                {
+                  type: "changeMap",
+                  map: "Street",
+                  x: withGrid(29),
+                  y: withGrid(9),
+                  direction: "down",
+                },
+              ],
+            },
+          ],
+        },
+      },
+      Street: {
+        id: "Street",
+        lowerSrc: "/maps/StreetLower.png",
+        upperSrc: "/maps/StreetUpper.png",
+        gameObjects: {
+          hero: new Person({
+            isPlayerControlled: true,
+            x: withGrid(30),
+            y: withGrid(10),
+          }),
+        },
+        cutsceneSpaces: {
+          [asGridCoord(29, 9)]: [
+            {
+              events: [
+                {
+                  type: "changeMap",
+                  map: "Kitchen",
+                  x: withGrid(5),
+                  y: withGrid(10),
+                  direction: "up",
+                },
+              ],
+            },
+          ],
+        },
       },
     }
     const sceneTransition = new SceneTransition()
     sceneTransition.init(document.querySelector(".game-container"), () => {
-      this.map.overworld.startMap(OVERWORLD_MAP[this.event.map])
+      this.map.overworld.startMap(OVERWORLD_MAP[this.event.map], {
+        x: this.event.x,
+        y: this.event.y,
+        direction: this.event.direction,
+      })
       resolve()
       sceneTransition.fadeOut()
     })
@@ -224,6 +280,7 @@ class OverworldEvent {
   // pause(resolve) {
   //   this.map.isPaused = true;
   //   const menu = new PauseMenu({
+  //     progress: this.map.overworld.progress,
   //     onComplete: () => {
   //       resolve();
   //       this.map.isPaused = false;
@@ -242,8 +299,8 @@ class OverworldEvent {
     const menu = new CraftingMenu({
       pizzas: this.event.pizzas,
       onComplete: () => {
-        resolve();
-      }
+        resolve()
+      },
     })
     menu.init(document.querySelector(".game-container"))
   }

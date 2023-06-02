@@ -1,11 +1,12 @@
-import { OverworldMap, KeyPressListener, DirectionInput, Hud } from "."
+import { OverworldMap, KeyPressListener, DirectionInput, Hud, Progress } from "."
 
 class Overworld {
-  constructor({ element, canvas }) {
+  constructor({ element, canvas, OVERWORLD_MAP }) {
     this.element = element
     this.canvas = canvas
     this.ctx = this.canvas.getContext("2d")
     this.map = null
+    this.OVERWORLD_MAP = OVERWORLD_MAP
   }
 
   startGameLoop() {
@@ -45,7 +46,7 @@ class Overworld {
 
       // if (!this.map.isPaused) {
       //   requestAnimationFrame(() => {
-      //     step();   
+      //     step();
       //   })
       // }
 
@@ -77,19 +78,50 @@ class Overworld {
         this.map.checkForFootstepCutscene()
       }
     })
-    
   }
 
-  startMap(mapConfig) {
-    this.map = new OverworldMap(mapConfig)
-    this.map.overworld = this
-    this.map.mountObjects()
-  }
+  startMap(mapConfig, heroInitialState=null) {
+    this.map = new OverworldMap(mapConfig);
+    this.map.overworld = this;
+    this.map.mountObjects();
+  
+    if (heroInitialState) {
+      const {hero} = this.map.gameObjects;
+      this.map.removeWall(hero.x, hero.y);
+      hero.x = heroInitialState.x;
+      hero.y = heroInitialState.y;
+      hero.direction = heroInitialState.direction;
+      this.map.addWall(hero.x, hero.y);
+    }
+  
+    this.progress.mapId = mapConfig.id;
+    this.progress.startingHeroX = this.map.gameObjects.hero.x;
+    this.progress.startingHeroY = this.map.gameObjects.hero.y;
+    this.progress.startingHeroDirection = this.map.gameObjects.hero.direction;
+  
+    console.log(this.map.walls)
+  
+   }
 
   init() {
+    this.progress = new Progress()
+
+    //Potentially load saved data
+    let initialHeroState = null
+    const saveFile = this.progress.getSaveFile()
+    if (saveFile) {
+      this.progress.load()
+      initialHeroState = {
+        x: this.progress.startingHeroX,
+        y: this.progress.startingHeroY,
+        direction: this.progress.startingHeroDirection,
+      }
+    }
+
     this.hud = new Hud()
     this.hud.init(document.querySelector(".game-container"))
 
+    this.startMap(this.OVERWORLD_MAP[this.progress.mapId], initialHeroState )
 
     this.bindActionInput()
     this.bindHeroPositionCheck()
