@@ -32,29 +32,34 @@ const Index = () => {
             y: withGrid(9),
             src: "/characters/people/npc1.png",
             behaviorLoop: [
-              { type: "stand", direction: "left", time: 800 },
-              { type: "stand", direction: "up", time: 800 },
-              { type: "stand", direction: "right", time: 1200 },
-              { type: "stand", direction: "up", time: 300 },
+              { type: "stand",  direction: "left", time: 800 },
+              { type: "stand",  direction: "up", time: 800 },
+              { type: "stand",  direction: "right", time: 1200 },
+              { type: "stand",  direction: "up", time: 300 },
             ],
             talking: [
               {
                 events: [
-                  {
-                    type: "textMessage",
-                    text: "I'm busy...",
-                    faceHero: "npcA",
-                  },
-                  { type: "textMessage", text: "Go away!" },
-                  { who: "hero", type: "walk", direction: "up" },
-                ],
-              },
-            ],
+                  { type: "textMessage", text: "I'm busy...", faceHero: "npcA" },
+                  { type: "battle", enemyId: "beth" }
+                  // { type: "textMessage", text: "Go away!"},
+                  //{ who: "hero", type: "walk",  direction: "up" },
+                ]
+              }
+            ]
           }),
           npcB: new Person({
             x: withGrid(8),
             y: withGrid(5),
-            src: "/characters/people/npc2.png",
+            src: "/characters/people/erio.png",
+            talking: [
+              {
+                events: [
+                  { type: "textMessage", text: "Bahaha!", faceHero: "npcB" },
+                  { type: "battle", enemyId: "erio" }
+                ]
+              }
+            ]
             // behaviorLoop: [
             //   { type: "walk",  direction: "left" },
             //   { type: "stand",  direction: "up", time: 800 },
@@ -65,30 +70,33 @@ const Index = () => {
           }),
         },
         walls: {
-          [asGridCoord(7, 6)]: true,
-          [asGridCoord(8, 6)]: true,
-          [asGridCoord(7, 7)]: true,
-          [asGridCoord(8, 7)]: true,
+          [asGridCoord(7,6)] : true,
+          [asGridCoord(8,6)] : true,
+          [asGridCoord(7,7)] : true,
+          [asGridCoord(8,7)] : true,
         },
         cutsceneSpaces: {
-          [asGridCoord(7, 4)]: [
+          [asGridCoord(7,4)]: [
             {
               events: [
-                { who: "npcB", type: "walk", direction: "left" },
-                { who: "npcB", type: "stand", direction: "up", time: 500 },
-                { type: "textMessage", text: "You can't be in there!" },
-                { who: "npcB", type: "walk", direction: "right" },
-                { who: "hero", type: "walk", direction: "down" },
-                { who: "hero", type: "walk", direction: "left" },
-              ],
-            },
+                { who: "npcB", type: "walk",  direction: "left" },
+                { who: "npcB", type: "stand",  direction: "up", time: 500 },
+                { type: "textMessage", text:"You can't be in there!"},
+                { who: "npcB", type: "walk",  direction: "right" },
+                { who: "hero", type: "walk",  direction: "down" },
+                { who: "hero", type: "walk",  direction: "left" },
+              ]
+            }
           ],
-          [asGridCoord(5, 10)]: [
+          [asGridCoord(5,10)]: [
             {
-              events: [{ type: "changeMap", map: "Kitchen" }],
-            },
-          ],
-        },
+              events: [
+                { type: "changeMap", map: "Kitchen" }
+              ]
+            }
+          ]
+        }
+        
       },
       Kitchen: {
         lowerSrc: "/maps/KitchenLower.png",
@@ -106,16 +114,12 @@ const Index = () => {
             talking: [
               {
                 events: [
-                  {
-                    type: "textMessage",
-                    text: "You made it!",
-                    faceHero: "npcB",
-                  },
-                ],
-              },
-            ],
-          }),
-        },
+                  { type: "textMessage", text: "You made it! This video is going to be such a good time!", faceHero:"npcB" },
+                ]
+              }
+            ]
+          })
+        }
       },
     }
     const overworld = new Overworld({
