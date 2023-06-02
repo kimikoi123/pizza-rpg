@@ -1,4 +1,4 @@
-import { OverworldMap, KeyPressListener, DirectionInput, Hud, Progress } from "."
+import { OverworldMap, KeyPressListener, DirectionInput, Hud, Progress, TitleScreen } from "."
 
 class Overworld {
   constructor({ element, canvas, OVERWORLD_MAP }) {
@@ -103,20 +103,28 @@ class Overworld {
   
    }
 
-  init() {
+  async init() {
+    const container = document.querySelector(".game-container");
+
     this.progress = new Progress()
 
+    this.titleScreen = new TitleScreen({
+      progress: this.progress
+    })
+    const useSaveFile = await this.titleScreen.init(container);
+
+
+
     //Potentially load saved data
-    let initialHeroState = null
-    const saveFile = this.progress.getSaveFile()
-    if (saveFile) {
-      this.progress.load()
-      initialHeroState = {
-        x: this.progress.startingHeroX,
-        y: this.progress.startingHeroY,
-        direction: this.progress.startingHeroDirection,
-      }
+    let initialHeroState = null;
+  if (useSaveFile) {
+    this.progress.load();
+    initialHeroState = {
+      x: this.progress.startingHeroX,
+      y: this.progress.startingHeroY,
+      direction: this.progress.startingHeroDirection,
     }
+  }
 
     this.hud = new Hud()
     this.hud.init(document.querySelector(".game-container"))
