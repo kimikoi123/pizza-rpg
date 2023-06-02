@@ -422,9 +422,6 @@
 }
 
 
-
-/* Submission Menus */
-
 /* Team */
 
 .Team {
@@ -454,4 +451,23 @@
 }
 .Team [data-active="true"] .active-pizza-indicator {
   display:block;
+}
+
+
+/* Hud */
+
+.Hud {
+  position: absolute;
+  left:2px;
+  top:10px;
+  image-rendering: pixelated;
+}
+
+.Hud .Combatant {
+  position: relative;
+  margin-bottom: 10px;
+}
+
+.Hud .Combatant_type {
+  display:none;
 }

@@ -1,6 +1,7 @@
 import { Combatant, TurnCycle, BattleEvent, Team } from "."
 import { Pizzas } from "../content/pizza"
 import { playerState } from "../state/PlayerState";
+import { emitEvent } from "../utils/helpers";
 
 class Battle {
   constructor({ enemy, onComplete }) {
@@ -57,8 +58,8 @@ class Battle {
     }
 
     //Dynamically add the Player team
-    playerState.lineup.forEach(id => {
-      this.addCombatant(id, "player", playerState.pizzas[id])
+    window.playerState.lineup.forEach(id => {
+      this.addCombatant(id, "player", window.playerState.pizzas[id])
     });
     //Now the enemy team
     Object.keys(this.enemy.pizzas).forEach(key => {
@@ -70,7 +71,7 @@ class Battle {
     this.items = []
 
     //Add in player items
-    playerState.items.forEach(item => {
+    window.playerState.items.forEach(item => {
       this.items.push({
         ...item,
         team: "player"
@@ -142,7 +143,7 @@ class Battle {
       onWinner: winner => {
 
         if (winner === "player") {
-          const playerState = playerState;
+          const playerState = window.playerState;
           Object.keys(playerState.pizzas).forEach(id => {
             const playerStatePizza = playerState.pizzas[id];
             const combatant = this.combatants[id];
@@ -159,7 +160,8 @@ class Battle {
             return !this.usedInstanceIds[item.instanceId]
           })
 
-
+          //Send signal to update
+          emitEvent("PlayerStateUpdated");
         }
 
         this.element.remove();

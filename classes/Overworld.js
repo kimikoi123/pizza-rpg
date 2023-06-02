@@ -1,4 +1,4 @@
-import { OverworldMap, KeyPressListener, DirectionInput } from "."
+import { OverworldMap, KeyPressListener, DirectionInput, Hud } from "."
 
 class Overworld {
   constructor({ element, canvas }) {
@@ -23,9 +23,8 @@ class Overworld {
           map: this.map,
         })
         // if (object.id === 'hero') {
-        //   console.log(object.x, object.y) 
+        //   console.log(object.x, object.y)
         // }
-        
       })
 
       //Draw Lower layer
@@ -74,6 +73,10 @@ class Overworld {
   }
 
   init() {
+    this.hud = new Hud()
+    this.hud.init(document.querySelector(".game-container"))
+
+
     this.bindActionInput()
     this.bindHeroPositionCheck()
 
@@ -83,12 +86,11 @@ class Overworld {
     this.startGameLoop()
 
     // this.map.startCutscene([
-      // { type: "battle", enemyid: "erio" }
-      // { type: "changeMap", map: "DemoRoom"}
-      // { type: "textMessage", text: "This is the very first message!"}
+    // { type: "battle", enemyid: "erio" }
+    // { type: "changeMap", map: "DemoRoom"}
+    // { type: "textMessage", text: "This is the very first message!"}
     // ])
   }
 }
-
 
 export default Overworld
