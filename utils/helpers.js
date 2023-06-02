@@ -57,3 +57,15 @@ export const oppositeDirection = (direction) => {
   }
   return "up"
 }
+
+export const wait = (ms) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve()
+    }, ms)
+  })
+}
+
+export const randomFromArray = (array) => {
+  return array[Math.floor(Math.random() * array.length)]
+}

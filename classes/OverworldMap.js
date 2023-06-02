@@ -1,5 +1,5 @@
 import { withGrid, nextPosition } from "../utils/helpers"
-import { OverworldEvent } from './index'
+import { OverworldEvent } from '.'
 
 class OverworldMap {
   constructor(config) {

@@ -1,4 +1,4 @@
-import { Sprite, OverworldEvent } from './index'
+import { Sprite, OverworldEvent } from '.'
 
 class GameObject {
   constructor(config) {

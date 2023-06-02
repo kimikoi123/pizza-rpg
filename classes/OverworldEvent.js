@@ -1,5 +1,5 @@
 import { oppositeDirection, withGrid, asGridCoord } from "../utils/helpers"
-import { TextMessage, Person, SceneTransition } from "./index"
+import { TextMessage, Person, SceneTransition } from "."
 import { Battle } from "../battle"
 
 class OverworldEvent {

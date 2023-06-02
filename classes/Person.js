@@ -1,4 +1,4 @@
-import { GameObject } from "./index"
+import { GameObject } from "."
 import { emitEvent } from "../utils/helpers";
 
 class Person extends GameObject {
