@@ -1,7 +1,7 @@
 import { oppositeDirection, withGrid, asGridCoord } from "../utils/helpers"
 import { TextMessage, Person, SceneTransition, PauseMenu, PizzaStone } from "."
 import { Battle } from "../battle"
-import { Enemies } from "../content/actions"
+import { Enemies } from "../content/data"
 import { playerState } from "../state/PlayerState"
 
 class OverworldEvent {

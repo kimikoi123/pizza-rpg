@@ -1,4 +1,4 @@
-import { Pizzas } from "../content/pizza";
+import { Pizzas } from "../content/data";
 import { playerState } from "../state/PlayerState";
 import { Combatant } from "../battle";
 

@@ -1,7 +1,7 @@
 import { KeyboardMenu } from "."
 import { wait } from "../utils/helpers"
 import { playerState } from "../state/PlayerState"
-import { Pizzas } from "../content/pizza"
+import { Pizzas } from "../content/data"
 
 class PauseMenu {
   constructor({ progress, onComplete }) {

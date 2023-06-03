@@ -1,5 +1,5 @@
 import { Combatant, TurnCycle, BattleEvent, Team } from "."
-import { Pizzas } from "../content/pizza"
+import { Pizzas } from "../content/data"
 import { playerState } from "../state/PlayerState"
 import { emitEvent } from "../utils/helpers"
 

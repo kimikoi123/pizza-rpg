@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from "react"
-import { Person, Overworld, PizzaStone } from "../classes"
+import { useEffect, useRef } from "react"
+import { Overworld } from "../classes"
 import { withGrid, asGridCoord } from "../utils/helpers"
 import { signInAnonymously, onAuthStateChanged } from "firebase/auth"
 import { auth, database } from "../utils/firebase"

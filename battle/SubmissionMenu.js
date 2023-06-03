@@ -1,4 +1,4 @@
-import { Actions } from "../content/actions"
+import { Actions } from "../content/data"
 import { KeyboardMenu } from "../classes"
 
 class SubmissionMenu {
